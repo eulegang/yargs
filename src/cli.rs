@@ -42,7 +42,7 @@ pub struct Cli {
 
     /// input substitution pattern
     #[structopt(short = "P", long = "pattern", default_value = "%")]
-    pub subst: String,
+    pub pattern: String,
 
     /// Command pattern to run (if no pattern is specified, the end is implied)
     pub command: Vec<String>,
@@ -72,6 +72,14 @@ impl Cli {
 
         if self.is_parallel() && self.ask {
             return Some("parallel jobs may not ask before execution");
+        }
+
+        if self.command.is_empty() {
+            return Some("a command must be specified to execute");
+        }
+
+        if &self.command[0] == &self.pattern {
+            return Some("a command may not start with the pattern");
         }
 
         None

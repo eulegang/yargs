@@ -1,10 +1,14 @@
 use structopt::StructOpt;
 
 mod cli;
+mod invoker;
+
+use cli::Cli;
+use invoker::Invoker;
 
 fn main() {
-    let cli = cli::Cli::from_args();
+    let cli = Cli::from_args();
     cli.validate();
 
-    dbg!(cli);
+    let invoker = Invoker::new(&cli.pattern, cli.command);
 }
