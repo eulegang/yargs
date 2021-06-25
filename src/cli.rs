@@ -44,7 +44,7 @@ pub struct Cli {
     #[structopt(short = "P", long = "pattern", default_value = "%")]
     pub subst: String,
 
-    /// Command pattern to run
+    /// Command pattern to run (if no pattern is specified, the end is implied)
     pub command: Vec<String>,
 }
 
