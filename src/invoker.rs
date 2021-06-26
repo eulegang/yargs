@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fs::File;
 use std::io;
 use std::process::{Command, Stdio};
@@ -45,15 +46,15 @@ impl Invoker {
             unsafe { Stdio::from_raw_handle(f.as_raw_handle()) }
         }
 
-        let status = Command::new(&fills[0])
-            .args(&fills[1..])
+        let status = Command::new(&*fills[0])
+            .args(&fills[1..].iter().map(|s| s.as_ref()).collect::<Vec<&str>>())
             .stdin(tty.map(to_stdio).unwrap_or(Stdio::null()))
             .status()?;
 
         Ok(status.code().unwrap_or(15) as u8)
     }
 
-    fn fill<'s, 'a>(&'s self, inputs: &[&'a str]) -> Vec<&'a str>
+    fn fill<'s, 'a>(&'s self, inputs: &[&'a str]) -> Vec<Cow<'a, str>>
     where
         's: 'a,
     {
@@ -70,13 +71,13 @@ impl Invoker {
             if Some(&&current) == offset_iter.peek() {
                 if let Some(input) = input_iter.next() {
                     offset_iter.next();
-                    fill.push(*input);
+                    fill.push(Cow::from(*input));
                 }
             } else {
                 if let Some(s) = static_iter.next() {
-                    fill.push(s.as_str());
+                    fill.push(Cow::from(s.as_str()));
                 } else if let Some(input) = input_iter.next() {
-                    fill.push(*input);
+                    fill.push(Cow::from(*input));
                 } else {
                     break;
                 }
@@ -86,7 +87,7 @@ impl Invoker {
         }
 
         while let Some(input) = input_iter.next() {
-            fill.push(*input);
+            fill.push(Cow::from(*input));
         }
 
         fill
