@@ -66,12 +66,22 @@ impl Cli {
             );
         }
 
-        if self.is_parallel() && self.tty {
-            return Some("parallel jobs may not be interactive");
+        if self.lines == Some(0) {
+            return Some("Lines may not be zero");
         }
 
-        if self.is_parallel() && self.ask {
-            return Some("parallel jobs may not ask before execution");
+        if self.is_parallel() {
+            if self.tty {
+                return Some("parallel jobs may not be interactive");
+            }
+
+            if self.ask {
+                return Some("parallel jobs may not ask before execution");
+            }
+
+            if self.join {
+                return Some("one job may not be parallel");
+            }
         }
 
         if self.command.is_empty() {
