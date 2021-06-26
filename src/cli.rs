@@ -18,7 +18,7 @@ pub struct Cli {
 
     /// join a certain amount of input lines
     #[structopt(short = "l", long = "lines")]
-    pub lines: Option<u64>,
+    pub lines: Option<u32>,
 
     /// run n parallel jobs (defaults to the number of cores)
     #[structopt(short = "p", long = "parallel")]

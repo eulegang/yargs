@@ -32,7 +32,7 @@ impl Invoker {
         Invoker { offsets, statics }
     }
 
-    fn run(&self, inputs: &[&str], tty: Option<&File>) -> io::Result<u8> {
+    pub fn run(&self, inputs: &[&str], tty: Option<&File>) -> io::Result<u8> {
         let fills = self.fill(inputs);
 
         #[cfg(unix)]
