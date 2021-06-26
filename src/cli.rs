@@ -32,10 +32,6 @@ pub struct Cli {
     #[structopt(short = "A", long = "ask")]
     pub ask: bool,
 
-    /// runs even when input is empty
-    #[structopt(short = "e", long = "empty")]
-    pub empty: bool,
-
     /// trace executions
     #[structopt(short = "t", long = "trace")]
     pub trace: bool,
