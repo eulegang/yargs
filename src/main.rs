@@ -43,12 +43,24 @@ fn main() {
         collector.push(input);
 
         if collector.full() {
-            invoker.preview(&collector.refs()).run().unwrap();
+            let preview = invoker.preview(&collector.refs());
+
+            if cli.trace {
+                eprintln!("{}", preview);
+            }
+
+            preview.run().unwrap();
             collector.clear();
         }
     }
 
     if !collector.is_empty() {
-        invoker.preview(&collector.refs()).run().unwrap();
+        let preview = invoker.preview(&collector.refs());
+
+        if cli.trace {
+            eprintln!("{}", preview);
+        }
+
+        preview.run().unwrap();
     }
 }
