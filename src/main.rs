@@ -26,7 +26,7 @@ fn main() {
     let limit = match (cli.join, cli.lines) {
         (true, _) => Limit::Unlimited,
         (_, Some(s)) => s.into(),
-        (_, None) => 1.into(),
+        (_, None) => invoker.slots().into(),
     };
 
     let mut collector = Collector::new(limit);

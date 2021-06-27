@@ -72,4 +72,17 @@ impl Invoker {
 
         Preview::new(fill)
     }
+
+    pub fn slots(&self) -> u32 {
+        let mut slots = self.offsets.len() as u32;
+
+        for template in &self.templates {
+            match template {
+                Template::Interp { offsets, .. } => slots += offsets.len() as u32,
+                _ => (),
+            }
+        }
+
+        slots
+    }
 }
