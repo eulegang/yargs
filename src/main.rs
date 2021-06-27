@@ -43,16 +43,12 @@ fn main() {
         collector.push(input);
 
         if collector.full() {
-            invoker
-                .run(&collector.refs(), None)
-                .expect("should just work");
+            invoker.preview(&collector.refs()).run().unwrap();
             collector.clear();
         }
     }
 
     if !collector.is_empty() {
-        invoker
-            .run(&collector.refs(), None)
-            .expect("should just work");
+        invoker.preview(&collector.refs()).run().unwrap();
     }
 }
