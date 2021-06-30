@@ -4,8 +4,12 @@ version = "0.1.0"
 edition = "2018"
 
 description = "a rusty version of xargs"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+authors = ["eulegang@eulegang.dev"]
+repository = "https://github.com/eulegang/yargs"
+readme = "README.md"
+license = "MIT"
+categories = [ "command-line-utilities" ]
+keywords = [ "xargs" ]
 
 [dependencies]
 structopt = "0.3"
