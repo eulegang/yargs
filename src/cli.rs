@@ -55,6 +55,14 @@ impl Cli {
         }
     }
 
+    pub fn fill_parallel(mut self) -> Cli {
+        if self.parallel.is_none() && !self.ask && !self.tty {
+            self.parallel = Some(num_cpus::get() as u16);
+        }
+
+        self
+    }
+
     fn validation_message(&self) -> Option<&'static str> {
         if self.join && self.lines.is_some() {
             return Some(

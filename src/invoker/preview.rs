@@ -12,6 +12,11 @@ pub struct Preview<'a> {
     args: Vec<Cow<'a, str>>,
 }
 
+#[derive(Debug)]
+pub struct DetachedPreview {
+    args: Vec<String>,
+}
+
 impl<'a> Preview<'a> {
     pub fn new(args: Vec<Cow<'a, str>>) -> Preview<'a> {
         Preview { args }
@@ -31,7 +36,7 @@ impl<'a> Preview<'a> {
         Ok(status.code().unwrap_or(15) as u8)
     }
 
-    pub fn run_interactive(&self, tty: &mut File) -> io::Result<u8> {
+    pub fn run_interactive(&self, tty: &File) -> io::Result<u8> {
         let status = Command::new(&*self.args[0])
             .args(
                 &self.args[1..]
@@ -43,6 +48,16 @@ impl<'a> Preview<'a> {
             .status()?;
 
         Ok(status.code().unwrap_or(15) as u8)
+    }
+
+    pub fn detach(&self) -> DetachedPreview {
+        let mut args = Vec::new();
+
+        for arg in &self.args {
+            args.push(arg.to_string());
+        }
+
+        DetachedPreview { args }
     }
 
     #[cfg(test)]
@@ -57,7 +72,35 @@ impl<'a> Preview<'a> {
     }
 }
 
+impl DetachedPreview {
+    pub fn run(&self) -> io::Result<u8> {
+        let status = Command::new(&*self.args[0])
+            .args(
+                &self.args[1..]
+                    .iter()
+                    .map(|s| s.as_ref())
+                    .collect::<Vec<&str>>(),
+            )
+            .stdin(Stdio::null())
+            .status()?;
+
+        Ok(status.code().unwrap_or(15) as u8)
+    }
+}
+
 impl std::fmt::Display for Preview<'_> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(fmt, "{}", &self.args[0])?;
+
+        for s in &self.args[1..] {
+            write!(fmt, " {}", s)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl std::fmt::Display for DetachedPreview {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(fmt, "{}", &self.args[0])?;
 

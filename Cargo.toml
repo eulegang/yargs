@@ -9,4 +9,5 @@ description = "a rusty version of xargs"
 
 [dependencies]
 structopt = "0.3"
+num_cpus = "1.13"
 

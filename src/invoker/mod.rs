@@ -6,7 +6,7 @@ mod template;
 #[cfg(test)]
 mod test;
 
-use preview::Preview;
+pub use preview::{DetachedPreview, Preview};
 use template::Template;
 
 /// Takes patterns and fills them input and executes command

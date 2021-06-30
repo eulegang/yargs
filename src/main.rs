@@ -5,16 +5,20 @@ use structopt::StructOpt;
 mod cli;
 mod collector;
 mod invoker;
+mod proc;
 mod source;
 
 use cli::Cli;
 use collector::{Collector, Limit};
 use invoker::Invoker;
+use proc::Process;
 use source::Source;
 
 fn main() {
-    let cli = Cli::from_args();
+    let cli = Cli::from_args().fill_parallel();
     cli.validate();
+
+    let processor = proc::process(&cli);
 
     let invoker = Invoker::new(&cli.pattern, cli.command);
 
@@ -44,23 +48,15 @@ fn main() {
 
         if collector.full() {
             let preview = invoker.preview(&collector.refs());
-
-            if cli.trace {
-                eprintln!("{}", preview);
-            }
-
-            preview.run().unwrap();
+            processor.process(&preview);
             collector.clear();
         }
     }
 
     if !collector.is_empty() {
         let preview = invoker.preview(&collector.refs());
-
-        if cli.trace {
-            eprintln!("{}", preview);
-        }
-
-        preview.run().unwrap();
+        processor.process(&preview);
     }
+
+    processor.finalize();
 }
