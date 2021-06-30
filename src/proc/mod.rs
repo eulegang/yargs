@@ -1,5 +1,6 @@
 use crate::invoker::Preview;
 use crate::Cli;
+use std::fs::OpenOptions;
 
 mod inter;
 mod par;
@@ -37,7 +38,12 @@ pub fn process(cli: &Cli) -> Log<URun> {
     };
 
     if cli.ask {
-        todo!();
+        let tty = OpenOptions::new()
+            .read(true)
+            .write(true)
+            .open("/dev/tty")
+            .unwrap();
+        Log::Ask(tty, run)
     } else if cli.trace {
         Log::Trace(run)
     } else {
