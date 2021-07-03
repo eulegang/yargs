@@ -56,7 +56,7 @@ impl Cli {
     }
 
     pub fn fill_parallel(mut self) -> Cli {
-        if self.parallel.is_none() && !self.ask && !self.tty {
+        if self.parallel.is_none() && !self.ask && !self.tty && !self.join {
             self.parallel = Some(num_cpus::get() as u16);
         }
 
